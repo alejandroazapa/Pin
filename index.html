@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Oguri Cap - Cinderella Gray</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0b0c10; color: #ffffff; overflow-x: hidden;
+        }
+
+        /* --- PANTALLA 1: EL TELÓN --- */
+        .pantalla-portada {
+            position: relative; height: 100vh; width: 100%; z-index: 2;
+            margin-bottom: 100vh; background-color: #0b0c10; display: flex;
+            box-shadow: 0px 20px 50px rgba(0,0,0,0.9);
+        }
+
+        .mitad-imagen {
+            width: 45%; height: 100%; position: relative;
+            background: url('assets/8d4ab470746b91aac1e48578bc1832ab783638ef0a77e37617aed4b65611d6d6.jpg') left center/cover no-repeat;
+        }
+
+        .mitad-imagen::after {
+            content: ''; position: absolute; top: 0; right: 0; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, #0b0c10);
+        }
+
+        .mitad-texto {
+            width: 55%; height: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start; padding-left: 2rem;
+            position: relative; z-index: 3;
+        }
+
+        .caja-inclinada {
+            background-color: rgba(255, 255, 255, 0.95); color: #111;
+            padding: 10px 30px; transform: skewX(-15deg); display: inline-block;
+            margin-bottom: 15px; border-left: 8px solid #0055ff;
+        }
+
+        .texto-derecho { transform: skewX(15deg); font-weight: 900; font-size: 2.2rem; text-transform: uppercase; }
+        .caja-destacada { border-left-color: #ff3366; padding: 15px 40px; }
+        .texto-destacado { font-size: 3.5rem; }
+
+        .indicador-scroll {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            color: rgba(255,255,255,0.7); font-size: 1rem; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px;
+            animation: flotar 2s infinite ease-in-out; z-index: 10;
+        }
+
+        @keyframes flotar { 0%, 100% { bottom: 30px; } 50% { bottom: 15px; } }
+
+        /* --- PANTALLA 2: SECCIÓN DEL PIN --- */
+        .pantalla-pin {
+            position: fixed; top: 0; left: 0; height: 100vh; width: 100%; z-index: 1;
+            background: radial-gradient(circle at center, #1f212e 0%, #0b0c10 100%);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .marco-producto {
+            background: linear-gradient(145deg, #151720, #0f1016);
+            border: 1px solid #2a2d3e; border-radius: 16px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+            max-width: 900px; width: 90%; display: flex; overflow: hidden; position: relative;
+        }
+
+        .marco-producto::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #0055ff, #ff3366);
+        }
+
+        .seccion-imagen {
+            padding: 40px; background-color: rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            border-right: 1px solid #2a2d3e;
+        }
+
+        .pin-contenedor {
+            width: 280px; height: 280px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 3px solid #333;
+        }
+
+        .pin-contenedor img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+        .pin-contenedor:hover img { transform: scale(1.05); }
+
+        .seccion-info {
+            padding: 40px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center;
+        }
+
+        .etiqueta-especial {
+            align-self: flex-start; background: rgba(255, 51, 102, 0.15);
+            color: #ff3366; border: 1px solid rgba(255, 51, 102, 0.3);
+            padding: 5px 12px; border-radius: 50px; font-size: 0.85rem; font-weight: bold; margin-bottom: 15px;
+        }
+
+        .titulo-pin { font-size: 2.2rem; margin: 0 0 5px 0; font-weight: 800; }
+        .subtitulo-pin { font-size: 1.2rem; color: #0088ff; font-weight: 600; margin: 0 0 20px 0; }
+
+        .lista-especificaciones {
+            list-style: none; padding: 15px 0; margin: 0 0 20px 0;
+            border-top: 1px dashed #333; border-bottom: 1px dashed #333;
+        }
+        .lista-especificaciones li { margin-bottom: 8px; color: #a0a3b5; font-size: 1rem; }
+        .lista-especificaciones li strong { color: #ffffff; width: 110px; display: inline-block; }
+
+        .precio-caja {
+            background: rgba(0, 85, 255, 0.1); border-left: 4px solid #0055ff;
+            padding: 15px; border-radius: 8px; margin-bottom: 20px;
+        }
+        .precio-principal { font-size: 2rem; font-weight: 900; color: #fff; margin: 0; }
+        
+        .stock-texto { font-size: 1.2rem; font-weight: bold; color: #ff3366; margin-bottom: 15px; }
+
+        .botones-container {
+            display: flex; flex-direction: column; gap: 10px;
+        }
+
+        .btn-reserva {
+            background: #0055ff; color: white; padding: 15px 30px;
+            font-size: 1.1rem; font-weight: bold; border: none;
+            border-radius: 8px; cursor: pointer; text-transform: uppercase;
+            transition: background 0.3s; width: 100%; text-align: center;
+        }
+        .btn-reserva:hover { background: #0044cc; }
+
+        .btn-consultas {
+            background: transparent; color: #a0a3b5; padding: 10px; font-size: 0.9rem;
+            border: 1px solid #333; border-radius: 8px; cursor: pointer;
+            text-align: center; text-decoration: none; transition: all 0.3s;
+        }
+        .btn-consultas:hover {
+            color: #fff; border-color: #25D366; background: rgba(37, 211, 102, 0.1);
+        }
+
+        .btn-yape { background: #9013fe; }
+        .btn-yape:hover { background: #7a10d8; }
+
+        /* --- VENTANA MODAL --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 100; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #151720; border: 1px solid #2a2d3e; border-radius: 16px;
+            width: 90%; max-width: 420px; padding: 30px; position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center;
+            max-height: 90vh; overflow-y: auto;
+        }
+
+        .btn-cerrar {
+            position: absolute; top: 15px; right: 20px; color: #a0a3b5; font-size: 1.5rem;
+            font-weight: bold; cursor: pointer; border: none; background: transparent;
+        }
+        .btn-cerrar:hover { color: #fff; }
+
+        .modal-img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; border: 2px solid #333;}
+
+        .control-cantidad { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; }
+        .btn-cant {
+            background: #2a2d3e; color: white; border: none; border-radius: 50%;
+            width: 40px; height: 40px; font-size: 1.5rem; font-weight: bold; cursor: pointer;
+        }
+        .btn-cant:hover { background: #0055ff; }
+        .numero-cant { font-size: 2rem; font-weight: 900; width: 40px; }
+
+        .total-caja { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+        .total-caja h4 { margin: 0; color: #a0a3b5; font-size: 1rem; }
+        .total-monto { font-size: 2.2rem; font-weight: 900; color: #9013fe; margin: 5px 0 0 0; }
+
+        .form-grupo { text-align: left; margin-bottom: 15px; }
+        .form-grupo label { display: block; margin-bottom: 5px; color: #a0a3b5; font-size: 0.9rem; }
+        .form-grupo input {
+            width: 100%; padding: 12px; border-radius: 8px;
+            background: rgba(0,0,0,0.2); border: 1px solid #333; color: #fff; box-sizing: border-box;
+        }
+        .form-grupo input:focus { outline: none; border-color: #0055ff; }
+        
+        .qr-yape { width: 150px; height: 150px; border-radius: 10px; margin-bottom: 10px; border: 2px solid #9013fe;}
+        
+        .file-upload { background: rgba(0,0,0,0.2); padding: 10px; border: 1px dashed #9013fe; border-radius: 8px; margin-bottom: 20px; }
+        .file-upload input { color: #fff; font-size: 0.8rem; width: 100%; }
+
+        .icono-exito { font-size: 4rem; color: #25D366; margin-bottom: 10px; }
+        .caja-evento { background: rgba(37, 211, 102, 0.1); border: 1px solid #25D366; padding: 15px; border-radius: 8px; text-align: left; margin: 20px 0; }
+        .caja-evento p { margin: 5px 0; font-size: 0.9rem; color: #ddd; }
+        .caja-evento strong { color: #fff; }
+
+        @media (max-width: 768px) {
+            .pantalla-portada { flex-direction: column; }
+            .mitad-imagen { width: 100%; height: 50%; }
+            .mitad-imagen::after { background: linear-gradient(to bottom, transparent, #0b0c10); width: 100%; height: 50%; top: auto; bottom: 0; }
+            .mitad-texto { width: 100%; height: 50%; padding: 20px; align-items: center; text-align: center; }
+            .marco-producto { flex-direction: column; }
+            .seccion-imagen { border-right: none; border-bottom: 1px solid #2a2d3e; padding: 30px; }
+            .seccion-info { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA 1: PORTADA -->
+    <div class="pantalla-portada">
+        <div class="mitad-imagen"></div>
+        <div class="mitad-texto">
+            <div class="caja-inclinada"><div class="texto-derecho">Proyecto Especial</div></div>
+            <div class="caja-inclinada caja-destacada"><div class="texto-derecho texto-destacado">CINDERELLA GRAY</div></div>
+        </div>
+        <div class="indicador-scroll">↓</div>
+    </div>
+
+    <!-- PANTALLA 2: PRODUCTO -->
+    <div class="pantalla-pin">
+        <div class="marco-producto">
+            <div class="seccion-imagen">
+                <div class="pin-contenedor"><img src="image_5a18c4.jpg" alt="Oguri Cap"></div>
+            </div>
+            <div class="seccion-info">
+                <div class="etiqueta-especial">🌟 Edición Especial Limitada</div>
+                <h2 class="titulo-pin">Pin Oguri Cap</h2>
+                <h3 class="subtitulo-pin">Cinderella Gray</h3>
+                <ul class="lista-especificaciones">
+                    <li><strong>Dimensiones:</strong> 5 x 5 cm</li>
+                    <li><strong>Arte:</strong> Ilustración Promocional Oficial</li>
+                    <li><strong>Tiraje:</strong> Lote único e irrepetible para el evento</li>
+                </ul>
+                <div class="precio-caja">
+                    <h3 class="precio-principal">S/ 5.00</h3>
+                </div>
+                <div class="stock-texto">Stock: 100 / 100 Disp.</div>
+                
+                <div class="botones-container">
+                    <button class="btn-reserva" onclick="abrirModal()">Reservar Ahora</button>
+                    <!-- Enlace a WhatsApp para consultas -->
+                    <a href="https://wa.me/51951308005?text=Hola,%20tengo%20una%20consulta%20sobre%20los%20pines%20de%20Cinderella%20Gray." target="_blank" class="btn-consultas">
+                        💬 Consultas al interno
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VENTANA MODAL DE RESERVA (FORMULARIO CON ENVÍO NATIVO HTML) -->
+    <div class="modal-overlay" id="modal-reserva">
+        <!-- El formulario ahora se envía directamente a Forminit sin fetch -->
+        <form class="modal-content" id="formulario-reserva" action="https://forminit.com/f/fsm9i4se61h" method="POST" enctype="multipart/form-data">
+            <button type="button" class="btn-cerrar" onclick="cerrarModal()">&times;</button>
+            
+            <!-- PASO 1: CANTIDAD -->
+            <div id="paso-1">
+                <h3 style="margin-top: 0;">Selecciona la Cantidad</h3>
+                <img src="image_5a18c4.jpg" class="modal-img" alt="Pin">
+                
+                <div class="control-cantidad">
+                    <button type="button" class="btn-cant" onclick="cambiarCantidad(-1)">-</button>
+                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
+                    <input type="hidden" name="fi-text-cantidad" id="input-cantidad" value="1">
+                    <div class="numero-cant" id="display-cant">1</div>
+                    <button type="button" class="btn-cant" onclick="cambiarCantidad(1)">+</button>
+                </div>
+
+                <div class="total-caja">
+                    <h4>Total a pagar:</h4>
+                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
+                    <input type="hidden" name="fi-text-total" id="input-total" value="5.00">
+                    <div class="total-monto" id="display-total">S/ 5.00</div>
+                </div>
+
+                <button type="button" class="btn-reserva" onclick="irPaso2()">Continuar</button>
+            </div>
+
+            <!-- PASO 2: DATOS -->
+            <div id="paso-2" style="display: none;">
+                <h3 style="margin-top: 0;">Tus Datos</h3>
+                <p style="color: #a0a3b5; font-size: 0.9rem;">Necesarios para validar tu entrega el día del evento.</p>
+                
+                <div class="form-grupo">
+                    <label>Nombre y Apellido</label>
+                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
+                    <input type="text" id="campo-nombre" name="fi-sender-fullName" placeholder="Ej. Juan Pérez" required>
+                </div>
+                <div class="form-grupo">
+                    <label>Número de DNI</label>
+                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
+                    <input type="number" id="campo-dni" name="fi-text-dni" placeholder="Ej. 71234567" required>
+                </div>
+
+                <button type="button" class="btn-reserva" onclick="irPaso3()">Ir a Pagar</button>
+                <button type="button" onclick="irPaso(1)" style="background: transparent; color: #a0a3b5; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline;">Volver</button>
+            </div>
+
+            <!-- PASO 3: PAGO YAPE -->
+            <div id="paso-3" style="display: none;">
+                <h3 style="margin-top: 0;">Realiza el Pago</h3>
+                <p style="color: #a0a3b5; font-size: 0.9rem;">Escanea el QR o yapea al número para asegurar tu reserva.</p>
+                
+                <!-- PON AQUÍ TU IMAGEN DEL QR DE YAPE -->
+                <img src="assets/WhatsApp Image 2026-07-20 at 4.09.23 PM.jpeg" class="qr-yape" alt="QR Yape">
+                <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">989 530 348</div>
+                <!-- RECUERDA CAMBIAR ESTO POR TU NOMBRE -->
+                <div style="color: #9013fe; margin-bottom: 15px; font-weight: bold;">Titular: [Joe]</div>
+                
+                <div class="file-upload">
+                    <label style="display: block; margin-bottom: 5px; color: #a0a3b5;">Sube la captura de tu pago:</label>
+                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
+                    <input type="file" name="fi-file-comprobante" accept="image/*" required>
+                </div>
+
+                <button type="submit" class="btn-reserva btn-yape">Validar Pago y Reservar</button>
+                <button type="button" onclick="irPaso(2)" style="background: transparent; color: #a0a3b5; border: none; margin-top: 15px; cursor: pointer; text-decoration: underline;">Volver a mis datos</button>
+            </div>
+
+            <!-- PASO 4: ÉXITO -->
+            <div id="paso-4" style="display: none;">
+                <div class="icono-exito">✓</div>
+                <h3 style="margin-top: 0; font-size: 1.8rem;">¡Reserva Confirmada!</h3>
+                <p style="color: #a0a3b5;">Tus datos y comprobante han sido registrados.</p>
+                
+                <div class="caja-evento">
+                    <p style="text-align: center; color: #25D366; font-weight: bold; margin-bottom: 10px;">La entrega se realizará en el evento:</p>
+                    <p>📍 <strong>Lugar:</strong> CineStar Excelsior (Jirón de la Unión)</p>
+                    <p>📅 <strong>Fecha:</strong> Domingo 26 de Julio</p>
+                    <p>🕒 <strong>Horario:</strong> 9:00 AM a 1:00 PM</p>
+                    <p style="margin-top: 10px; font-size: 0.8rem; border-top: 1px solid #25D366; padding-top: 5px;">
+                        <em>¡No faltes! Con tu DNI te entregaremos tu reserva. Disfruta de la Japan Cup, el cosplay y los sorteos.</em>
+                    </p>
+                </div>
+
+                <button type="button" class="btn-reserva" onclick="cerrarModal()">Entendido</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- SCRIPT JS -->
+    <script>
+        let cantidadActual = 1;
+        const PRECIO_FIJO = 5.00;
+        let totalPagar = 5.00;
+
+        // DETECTAR SI REGRESAMOS DE FORMINIT CON ÉXITO
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('exito') === 'true') {
+                // Si el parámetro está en la URL, abrimos el modal directo en el Paso 4
+                document.getElementById('modal-reserva').style.display = 'flex';
+                irPaso(4);
+                
+                // Limpiamos la URL para que no vuelva a salir si el usuario recarga la página
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        };
+
+        function abrirModal() {
+            document.getElementById('modal-reserva').style.display = 'flex';
+            reiniciarModal();
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal-reserva').style.display = 'none';
+        }
+
+        function irPaso(paso) {
+            document.getElementById('paso-1').style.display = 'none';
+            document.getElementById('paso-2').style.display = 'none';
+            document.getElementById('paso-3').style.display = 'none';
+            document.getElementById('paso-4').style.display = 'none';
+            document.getElementById('paso-' + paso).style.display = 'block';
+        }
+
+        function irPaso2() { irPaso(2); }
+        
+        function irPaso3() {
+            const nombre = document.getElementById('campo-nombre').value.trim();
+            const dni = document.getElementById('campo-dni').value.trim();
+            if(nombre === "" || dni === "") {
+                alert("Por favor completa tu Nombre y DNI.");
+                return;
+            }
+            irPaso(3);
+        }
+
+        function reiniciarModal() {
+            cantidadActual = 1;
+            actualizarUI();
+            document.getElementById('formulario-reserva').reset();
+            irPaso(1);
+        }
+
+        function cambiarCantidad(cambio) {
+            cantidadActual += cambio;
+            if (cantidadActual < 1) cantidadActual = 1;
+            if (cantidadActual > 100) cantidadActual = 100;
+
+            totalPagar = cantidadActual * PRECIO_FIJO;
+            actualizarUI();
+        }
+
+        function actualizarUI() {
+            document.getElementById('display-cant').innerText = cantidadActual;
+            document.getElementById('input-cantidad').value = cantidadActual;
+            
+            let totalFormateado = totalPagar.toFixed(2);
+            document.getElementById('display-total').innerText = 'S/ ' + totalFormateado;
+            document.getElementById('input-total').value = totalFormateado;
+        }
+    </script>
+</body>
+</html>
