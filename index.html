@@ -244,11 +244,20 @@
         </div>
     </div>
 
-    <!-- VENTANA MODAL DE RESERVA (FORMULARIO CON ENVÍO NATIVO HTML) -->
+    <!-- VENTANA MODAL DE RESERVA (AHORA CON FORMSUBMIT) -->
     <div class="modal-overlay" id="modal-reserva">
-        <!-- El formulario ahora se envía directamente a Forminit sin fetch -->
-        <form class="modal-content" id="formulario-reserva" action="https://forminit.com/f/fsm9i4se61h" method="POST" enctype="multipart/form-data">
+        
+        <!-- ENLACE DE FORMSUBMIT ACTUALIZADO CON TU CORREO -->
+        <form class="modal-content" id="formulario-reserva" action="https://formsubmit.co/alejandroapazaroblero7@gmail.com" method="POST" enctype="multipart/form-data">
             <button type="button" class="btn-cerrar" onclick="cerrarModal()">&times;</button>
+            
+            <!-- Redirección nativa de FormSubmit para volver a tu página -->
+            <input type="hidden" name="_next" value="https://pin-nine-blush.vercel.app/?exito=true">
+            
+            <!-- Desactivar captcha para mejor experiencia -->
+            <input type="hidden" name="_captcha" value="false">
+
+            <input type="hidden" name="_subject" value="🚨 NUEVA RESERVA - Pin Oguri Cap">
             
             <!-- PASO 1: CANTIDAD -->
             <div id="paso-1">
@@ -257,16 +266,15 @@
                 
                 <div class="control-cantidad">
                     <button type="button" class="btn-cant" onclick="cambiarCantidad(-1)">-</button>
-                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
-                    <input type="hidden" name="fi-text-cantidad" id="input-cantidad" value="1">
+                    <!-- Nombres de campos limpios para que se vean bien en tu correo -->
+                    <input type="hidden" name="Cantidad" id="input-cantidad" value="1">
                     <div class="numero-cant" id="display-cant">1</div>
                     <button type="button" class="btn-cant" onclick="cambiarCantidad(1)">+</button>
                 </div>
 
                 <div class="total-caja">
                     <h4>Total a pagar:</h4>
-                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
-                    <input type="hidden" name="fi-text-total" id="input-total" value="5.00">
+                    <input type="hidden" name="Total_Pagar" id="input-total" value="5.00">
                     <div class="total-monto" id="display-total">S/ 5.00</div>
                 </div>
 
@@ -280,13 +288,11 @@
                 
                 <div class="form-grupo">
                     <label>Nombre y Apellido</label>
-                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
-                    <input type="text" id="campo-nombre" name="fi-sender-fullName" placeholder="Ej. Juan Pérez" required>
+                    <input type="text" id="campo-nombre" name="Nombre" placeholder="Ej. Juan Pérez" required>
                 </div>
                 <div class="form-grupo">
                     <label>Número de DNI</label>
-                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
-                    <input type="number" id="campo-dni" name="fi-text-dni" placeholder="Ej. 71234567" required>
+                    <input type="number" id="campo-dni" name="DNI" placeholder="Ej. 71234567" required>
                 </div>
 
                 <button type="button" class="btn-reserva" onclick="irPaso3()">Ir a Pagar</button>
@@ -301,13 +307,11 @@
                 <!-- PON AQUÍ TU IMAGEN DEL QR DE YAPE -->
                 <img src="assets/WhatsApp Image 2026-07-20 at 4.09.23 PM.jpeg" class="qr-yape" alt="QR Yape">
                 <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">951 308 005</div>
-                <!-- RECUERDA CAMBIAR ESTO POR TU NOMBRE -->
                 <div style="color: #9013fe; margin-bottom: 15px; font-weight: bold;">Titular: [Joe]</div>
                 
                 <div class="file-upload">
                     <label style="display: block; margin-bottom: 5px; color: #a0a3b5;">Sube la captura de tu pago:</label>
-                    <!-- ¡ACTUALIZADO A REGLAS DE FORMINIT! -->
-                    <input type="file" name="fi-file-comprobante" accept="image/*" required>
+                    <input type="file" name="Comprobante" accept="image/*" required>
                 </div>
 
                 <button type="submit" class="btn-reserva btn-yape">Validar Pago y Reservar</button>
@@ -341,7 +345,7 @@
         const PRECIO_FIJO = 5.00;
         let totalPagar = 5.00;
 
-        // DETECTAR SI REGRESAMOS DE FORMINIT CON ÉXITO
+        // DETECTAR SI REGRESAMOS DE FORMSUBMIT CON ÉXITO
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('exito') === 'true') {
