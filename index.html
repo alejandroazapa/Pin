@@ -78,13 +78,42 @@
             border-right: 1px solid #2a2d3e;
         }
 
+        /* --- ESTILOS DEL CARRUSEL --- */
         .pin-contenedor {
             width: 280px; height: 280px; border-radius: 12px; overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.8); border: 3px solid #333;
+            position: relative; /* Necesario para botones y puntos */
         }
 
-        .pin-contenedor img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .pin-contenedor:hover img { transform: scale(1.05); }
+        .carrusel-imagenes {
+            display: flex; height: 100%; width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carrusel-imagenes img { 
+            min-width: 100%; height: 100%; object-fit: cover; 
+        }
+
+        .btn-carrusel {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.6); color: white; border: none;
+            cursor: pointer; padding: 10px; font-size: 16px; border-radius: 50%;
+            transition: background 0.3s; z-index: 10; display: flex; align-items: center; justify-content: center;
+            width: 35px; height: 35px;
+        }
+        .btn-carrusel:hover { background: #0055ff; }
+        .btn-prev { left: 10px; }
+        .btn-next { right: 10px; }
+
+        .carrusel-indicadores {
+            position: absolute; bottom: 10px; width: 100%;
+            display: flex; justify-content: center; gap: 6px; z-index: 10;
+        }
+        .dot {
+            height: 8px; width: 8px; background-color: rgba(255,255,255,0.4);
+            border-radius: 50%; display: inline-block; cursor: pointer; transition: 0.3s;
+        }
+        .dot.activo, .dot:hover { background-color: #ff3366; }
 
         .seccion-info {
             padding: 40px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center;
@@ -217,7 +246,28 @@
     <div class="pantalla-pin">
         <div class="marco-producto">
             <div class="seccion-imagen">
-                <div class="pin-contenedor"><img src="assets/02140abf-a396-41f9-844c-4fad03529354.jfif" alt="Oguri Cap"></div>
+                <!-- CARRUSEL DE IMÁGENES -->
+                <div class="pin-contenedor" id="carrusel">
+                    <div class="carrusel-imagenes" id="carrusel-imagenes">
+                        <!-- Imagen 1 -->
+                        <img src="assets/9af52ee1-1f69-45f7-86c0-47b0a3cf3ad9.jpg" alt="Oguri Cap 1">
+                        <!-- Imagen 2 (Cambia el src por tu imagen real) -->
+                        <img src="assets/13cefdb0-4402-4c7c-9907-a7fc5f31d3e1.jpg" alt="Oguri Cap 2">
+                        <!-- Imagen 3 (Cambia el src por tu imagen real) -->
+                        <img src="assets/c318cf54-875a-4bfd-8702-782f25fe3e9a.jpg" alt="Oguri Cap 3">
+                    </div>
+                    
+                    <!-- Flechas de navegación -->
+                    <button class="btn-carrusel btn-prev" onclick="moverCarrusel(-1)">&#10094;</button>
+                    <button class="btn-carrusel btn-next" onclick="moverCarrusel(1)">&#10095;</button>
+                    
+                    <!-- Indicadores (Puntos) -->
+                    <div class="carrusel-indicadores">
+                        <span class="dot activo" onclick="irAImagen(0)"></span>
+                        <span class="dot" onclick="irAImagen(1)"></span>
+                        <span class="dot" onclick="irAImagen(2)"></span>
+                    </div>
+                </div>
             </div>
             <div class="seccion-info">
                 <div class="etiqueta-especial">🌟 Edición Especial Limitada</div>
@@ -244,29 +294,23 @@
         </div>
     </div>
 
-    <!-- VENTANA MODAL DE RESERVA (AHORA CON FORMSUBMIT) -->
+    <!-- VENTANA MODAL DE RESERVA -->
     <div class="modal-overlay" id="modal-reserva">
         
-        <!-- ENLACE DE FORMSUBMIT ACTUALIZADO CON TU CORREO -->
         <form class="modal-content" id="formulario-reserva" action="https://formsubmit.co/alejandroapazaroblero7@gmail.com" method="POST" enctype="multipart/form-data">
             <button type="button" class="btn-cerrar" onclick="cerrarModal()">&times;</button>
             
-            <!-- Redirección nativa de FormSubmit para volver a tu página -->
             <input type="hidden" name="_next" value="https://pin-nine-blush.vercel.app/?exito=true">
-            
-            <!-- Desactivar captcha para mejor experiencia -->
             <input type="hidden" name="_captcha" value="false">
-
             <input type="hidden" name="_subject" value="🚨 NUEVA RESERVA - Pin Oguri Cap">
             
             <!-- PASO 1: CANTIDAD -->
             <div id="paso-1">
                 <h3 style="margin-top: 0;">Selecciona la Cantidad</h3>
-                <img src="assets/02140abf-a396-41f9-844c-4fad03529354.jfif" class="modal-img" alt="Pin">
+                <img src="assets/9af52ee1-1f69-45f7-86c0-47b0a3cf3ad9.jpg" class="modal-img" alt="Pin">
                 
                 <div class="control-cantidad">
                     <button type="button" class="btn-cant" onclick="cambiarCantidad(-1)">-</button>
-                    <!-- Nombres de campos limpios para que se vean bien en tu correo -->
                     <input type="hidden" name="Cantidad" id="input-cantidad" value="1">
                     <div class="numero-cant" id="display-cant">1</div>
                     <button type="button" class="btn-cant" onclick="cambiarCantidad(1)">+</button>
@@ -304,7 +348,6 @@
                 <h3 style="margin-top: 0;">Realiza el Pago</h3>
                 <p style="color: #a0a3b5; font-size: 0.9rem;">Escanea el QR o yapea al número para asegurar tu reserva.</p>
                 
-                <!-- PON AQUÍ TU IMAGEN DEL QR DE YAPE -->
                 <img src="assets/WhatsApp Image 2026-07-20 at 4.09.23 PM.jpeg" class="qr-yape" alt="QR Yape">
                 <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">951 308 005</div>
                 <div style="color: #9013fe; margin-bottom: 15px; font-weight: bold;">Titular: [Joe]</div>
@@ -341,19 +384,61 @@
 
     <!-- SCRIPT JS -->
     <script>
+        // --- LÓGICA DEL CARRUSEL ---
+        let indiceCarrusel = 0;
+        const totalImagenes = 3; 
+        let intervaloCarrusel;
+
+        function iniciarCarrusel() {
+            intervaloCarrusel = setInterval(() => {
+                moverCarrusel(1);
+            }, 10000); // Cambia cada 10 segundos
+        }
+
+        function reiniciarIntervalo() {
+            clearInterval(intervaloCarrusel);
+            iniciarCarrusel();
+        }
+
+        function moverCarrusel(direccion) {
+            indiceCarrusel += direccion;
+            if (indiceCarrusel >= totalImagenes) indiceCarrusel = 0;
+            if (indiceCarrusel < 0) indiceCarrusel = totalImagenes - 1;
+            actualizarVisorCarrusel();
+            reiniciarIntervalo();
+        }
+
+        function irAImagen(indice) {
+            indiceCarrusel = indice;
+            actualizarVisorCarrusel();
+            reiniciarIntervalo();
+        }
+
+        function actualizarVisorCarrusel() {
+            const contenedor = document.getElementById('carrusel-imagenes');
+            // Desplaza las imágenes multiplicando el índice por el 100% del ancho
+            contenedor.style.transform = `translateX(-${indiceCarrusel * 100}%)`;
+            
+            // Actualizar puntitos
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => dot.classList.remove('activo'));
+            dots[indiceCarrusel].classList.add('activo');
+        }
+
+        // --- LÓGICA DEL FORMULARIO Y MODAL ---
         let cantidadActual = 1;
         const PRECIO_FIJO = 5.00;
         let totalPagar = 5.00;
 
-        // DETECTAR SI REGRESAMOS DE FORMSUBMIT CON ÉXITO
         window.onload = function() {
+            // Arrancar el carrusel al iniciar la página
+            iniciarCarrusel();
+
+            // Detectar éxito
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('exito') === 'true') {
-                // Si el parámetro está en la URL, abrimos el modal directo en el Paso 4
                 document.getElementById('modal-reserva').style.display = 'flex';
                 irPaso(4);
-                
-                // Limpiamos la URL para que no vuelva a salir si el usuario recarga la página
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         };
